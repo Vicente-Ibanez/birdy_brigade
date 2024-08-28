@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://dnepl2iikj3k5"]
+[gd_scene load_steps=35 format=3 uid="uid://dnepl2iikj3k5"]
 
 [ext_resource type="Script" path="res://Scripts/multiplayer.gd" id="1_16vvh"]
 [ext_resource type="PackedScene" uid="uid://csqqpoxh63diu" path="res://Full_Assets/ui_controller.tscn" id="2_1yyuw"]
@@ -24,7 +24,6 @@
 [ext_resource type="Curve3D" uid="uid://dpa05ju6vnk10" path="res://river_temp/path3d_curve.tres" id="23_dmt7b"]
 [ext_resource type="Material" uid="uid://rwbjg3tgujum" path="res://river_temp/WaterPlane.tres" id="23_q1x7m"]
 [ext_resource type="Script" path="res://Scripts/river.gd" id="24_uuiuc"]
-[ext_resource type="PackedScene" uid="uid://bvs5pgblmb17e" path="res://Full_Assets/Bridge_Full.tscn" id="25_lhvw7"]
 
 [sub_resource type="Resource" id="Resource_yo1tf"]
 script = ExtResource("15_30fw0")
@@ -269,12 +268,6 @@ shadow_normal_bias = 4.952
 shadow_reverse_cull_face = true
 shadow_blur = 5.343
 
-[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="Terrain"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -133.822, -7.34075, -87.7674)
-radius = 6.98
-height = 22.48
-vertices = PackedVector3Array(0.0722046, 0, 1.09288, 86.3182, 0, 73.1744, 158.774, 0, 99.2119, 199.645, 0, 146.744, 239.608, 0, 170.056, 187.838, 0, 170.359, 150.297, 0, 111.625, 70.9755, 0, 83.7715, 45.8471, 0, 58.3404, -4.40976, 0, 29.5789)
-
 [node name="River_Path" type="Path3D" parent="." groups=["sub_type_river"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -84.2146, -2.18858, -40.6646)
 curve = ExtResource("23_dmt7b")
@@ -297,9 +290,6 @@ path_continuous_u = true
 path_u_distance = 1.0
 path_joined = false
 material = ExtResource("23_q1x7m")
-
-[node name="Bridge3" parent="." instance=ExtResource("25_lhvw7")]
-transform = Transform3D(-0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.258819, -23.2235, 2, -2.89778)
 
 [connection signal="child_entered_tree" from="." to="MiniMap" method="_on_node_3d_child_entered_tree"]
 [connection signal="healthChanged" from="bird_base" to="HealthBars/BirdHealth" method="_on_bird_base_health_changed"]
