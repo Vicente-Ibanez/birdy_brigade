@@ -18,8 +18,6 @@ var listener : PacketPeerUDP
 
 func _ready():
 	broadcastTimer = $BroadcastTimer
-	#if not "--server" in OS.get_cmdline_args():
-	print_debug("Setting  up for connection")
 	#setUp()
 	setUpSingleDeviceLan()
 		
@@ -69,11 +67,6 @@ func setUpBroadcastSingleDeviceLan(name):
 	RoomInfo.playerCount = GameManager.Players.size()
 	
 	broadcaster = PacketPeerUDP.new()
-	#broadcaster.set_broadcast_enabled(true)
-	#for port in listenPorts:
-		#broadcaster.set_dest_address(broadcastAddress, port)
-	
-	#broadcaster.set_dest_address(broadcastAddress, 8915)
 	var ok = broadcaster.bind(broadcastPort)
 	
 	if ok == OK:
