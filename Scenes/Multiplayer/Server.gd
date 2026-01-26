@@ -5,6 +5,7 @@ extends Node
 @export var Address = "127.0.0.1"
 @export var port = 8910
 var peer 
+
 func _ready():
 	multiplayer.peer_connected.connect(peer_connected)
 	multiplayer.peer_disconnected.connect(peer_disconnected)
@@ -12,6 +13,7 @@ func _ready():
 	multiplayer.connection_failed.connect(connection_failed)
 	
 	if "--server" in OS.get_cmdline_args():
+		print_debug("HOSTING GAME")
 		hostGame()
 		
 	$ServerBrowser.joinGame.connect(joinByIP)
@@ -60,7 +62,8 @@ func hostGame():
 	if error != OK:
 		print_debug("Cannot Host: ", error)
 		return
-
+	else:
+		print_debug("Created host")
 	peer.get_host().compress(ENetConnection.COMPRESS_RANGE_CODER)
 	
 	# Set up multiplayer peer, the peer is the host
@@ -70,7 +73,8 @@ func hostGame():
 func _on_host_pressed():
 	hostGame()
 	#SendPlayerInformation($LineEdit/Label.text, multiplayer.get_unique_id())
-	$ServerBrowser.setUpBroadcast($LineEdit.text + "s server")
+	#$ServerBrowser.setUpBroadcast($LineEdit.text + "s server")
+	$ServerBrowser.setUpBroadcastSingleDeviceLan($LineEdit.text + "s server")
 
 func _on_join_pressed():
 	joinByIP(Address)

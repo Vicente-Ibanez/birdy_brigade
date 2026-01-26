@@ -8,36 +8,72 @@ var broadcastTimer : Timer
 var RoomInfo = {"name": "name", "playerCount":0}
 var broadcaster : PacketPeerUDP
 var listener : PacketPeerUDP
-@export var listenPort : int = 8911
+@export var listenPort : int = 8911 # for online
+@export var listenPorts = [8911, 8914, 8915] # for single device lan
 @export var broadcastPort : int = 8912
+
 #@export var broadcastAddress : String = '192.168.1.255' # Local IP4 Address with .255 replacing last numbers
 @export var broadcastAddress : String = '127.0.0.1'
 @export var serverInfo : PackedScene
 
 func _ready():
 	broadcastTimer = $BroadcastTimer
-	setUp()
+	#if not "--server" in OS.get_cmdline_args():
+	print_debug("Setting  up for connection")
+	#setUp()
+	setUpSingleDeviceLan()
+		
 
-func setUp():
+#func setUp():
+	#listener = PacketPeerUDP.new()
+	#var ok = listener.bind(listenPort)
+	#if ok == OK:
+		#print_debug("Bound to Listen Port Successful", str(ok))
+		#$Label.text = "Bound to Listen Port: true" + str(listenPort)
+	#else:
+		#print_debug("Failed to bind to Listen Port!")
+		#$Label.text = "Bound to Listen Port: false" + str(listenPort)
+
+func setUpSingleDeviceLan():
 	listener = PacketPeerUDP.new()
-	var ok = listener.bind(listenPort)
+	for lp in listenPorts:
+		var ok = listener.bind(lp)
+		if ok == OK:
+			print_debug("Bound to Listen Port Successful", str(ok))
+			$Label.text = "Bound to Listen Port: true" + str(lp)
+			break
+		else:
+			print_debug("Failed to bind to Listen Port!")
+			$Label.text = "Bound to Listen Port: false" + str(lp)
+
+
+#func setUpBroadcast(name):
+	#RoomInfo.name = name
+	#RoomInfo.playerCount = GameManager.Players.size()
+	#
+	#broadcaster = PacketPeerUDP.new()
+	#broadcaster.set_broadcast_enabled(true)
+	#broadcaster.set_dest_address(broadcastAddress, listenPort)
+	#
+	#var ok = broadcaster.bind(broadcastPort)
+	#
+	#if ok == OK:
+		#print_debug("Bound to Broadcast Port Successful", str(broadcastPort))
+	#else:
+		#print_debug("Failed to bind to Broadcast Port!")
+	#broadcastTimer.start()
 	
-	if ok == OK:
-		print_debug("Bound to Listen Port Successful", str(listenPort))
-		$Label.text = "Bound to Listen Port: true"
-	else:
-		print_debug("Failed to bind to Listen Port!")
-		$Label.text = "Bound to Listen Port: false"
-
-
-func setUpBroadcast(name):
+	
+func setUpBroadcastSingleDeviceLan(name):
 	RoomInfo.name = name
 	RoomInfo.playerCount = GameManager.Players.size()
 	
 	broadcaster = PacketPeerUDP.new()
-	broadcaster.set_broadcast_enabled(true)
-	broadcaster.set_dest_address(broadcastAddress, listenPort)
+	#broadcaster.set_broadcast_enabled(true)
+	#for port in listenPorts:
+		#broadcaster.set_dest_address(broadcastAddress, port)
 	
+	#broadcaster.set_dest_address(broadcastAddress, 8915)
 	var ok = broadcaster.bind(broadcastPort)
 	
 	if ok == OK:
@@ -79,8 +115,12 @@ func _on_broadcast_timer_timeout():
 	
 	var data = JSON.stringify(RoomInfo)
 	var packet = data.to_ascii_buffer()
-	broadcaster.put_packet(packet)
-
+	#broadcaster.put_packet(packet)
+	
+	# Single Device LAN SETTINGS:
+	for port in listenPorts:
+		broadcaster.set_dest_address(broadcastAddress, port)
+		broadcaster.put_packet(packet)
 
 func clean_up():
 	listener.close()
