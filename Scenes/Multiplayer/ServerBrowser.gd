@@ -10,7 +10,8 @@ var broadcaster : PacketPeerUDP
 var listener : PacketPeerUDP
 @export var listenPort : int = 8911
 @export var broadcastPort : int = 8912
-@export var broadcastAddress : String = '192.168.1.255' # Local IP4 Address with .255 replacing last numbers
+#@export var broadcastAddress : String = '192.168.1.255' # Local IP4 Address with .255 replacing last numbers
+@export var broadcastAddress : String = '127.0.0.1'
 @export var serverInfo : PackedScene
 
 func _ready():
