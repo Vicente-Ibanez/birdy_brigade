@@ -42,6 +42,10 @@ var type
 
 func _ready():
 	type = GameManager.entity_types[side]
+	
+	if type["side"] == "bird":
+		var img = load("res://Assets/Creature_Images/Bird_Soldier.png")
+		$CreatureImage.texture = img
 	if !player:
 		player = get_tree().get_first_node_in_group(side + "camera")
 	

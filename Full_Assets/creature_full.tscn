@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://ct5n8h6i1yp26"]
 
 [ext_resource type="Script" path="res://Scripts/creature.gd" id="1_anaik"]
-[ext_resource type="Texture2D" uid="uid://5jaat58xrclc" path="res://Assets/squirrel soldier.png" id="2_kks2k"]
+[ext_resource type="Texture2D" uid="uid://5jaat58xrclc" path="res://Assets/squirrel soldier.png" id="2_361tj"]
 [ext_resource type="Script" path="res://Scripts/sprite_image.gd" id="3_4wwkd"]
 [ext_resource type="PackedScene" uid="uid://3na5vq7jdqi3" path="res://Full_Assets/character_health_bar.tscn" id="4_jqo1h"]
 [ext_resource type="Script" path="res://Scripts/inventory.gd" id="5_3ipts"]
@@ -32,7 +32,7 @@ debug_path_custom_color = Color(1, 0, 1, 1)
 [node name="CreatureImage" type="Sprite3D" parent="."]
 transform = Transform3D(0.129141, 0, 0, 0, 0.129141, 1.58819e-22, 0, -3.38813e-21, 0.129141, -0.182833, 0.285359, 0)
 billboard = 1
-texture = ExtResource("2_kks2k")
+texture = ExtResource("2_361tj")
 script = ExtResource("3_4wwkd")
 
 [node name="Area3D" type="Area3D" parent="."]
