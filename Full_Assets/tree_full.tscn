@@ -5,23 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://ddkktpxa3rujj" path="res://Assets/pine_tree/Pine_Tree.glb" id="3_evqse"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bylco"]
+radius = 1.95964
+height = 6.38263
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5je5n"]
 
-[node name="Tree_Full" type="CharacterBody3D"]
+[node name="Tree_Full" type="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, 2.08165e-12)
 collision_layer = 9
 script = ExtResource("1_fi6qn")
 
-[node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, 2.08165e-12)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, 2.08165e-12)
-shape = SubResource("CapsuleShape3D_bylco")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 2.08165e-12, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.99232, 2.08165e-12)
 shape = SubResource("CapsuleShape3D_bylco")
 
 [node name="HealthBar" parent="." instance=ExtResource("3_ec8kp")]
