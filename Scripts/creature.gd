@@ -1,6 +1,6 @@
 extends AnimatableBody3D
 
-@onready var cameras_list #= $"../UI_Controller"
+@onready var cameras_list
 var camera_location
 var player
 
