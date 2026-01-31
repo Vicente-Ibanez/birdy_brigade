@@ -1,10 +1,7 @@
 extends StaticBody3D
 # General Stats
-@export var main_type = "main_type_other_structures"
-@export var sub_type = "sub_type_base_tree"
-@export var side = "side_neutral"
-@export var enemy = "enemy_neutral"
-@export var has_inventory = "has_inventory_false"
+var type 
+
 
 # Base Stats
 var max_health = 10
@@ -30,13 +27,7 @@ var rng
 var attacker
 
 func _ready():
-	# Add to 5 basic groups
-	add_to_group(main_type)
-	add_to_group(sub_type)
-	add_to_group(side)
-	add_to_group(enemy)
-	add_to_group(has_inventory)
-
+	type = GameManager.entity_types["tree"]
 	current_health = max_health
 	health_bar_visible_timer = health_bar_visible_timer_initial 
 	update_health_bar()
@@ -69,13 +60,12 @@ func set_health(amount):
 
 func update_health_bar():
 	""" This function controlls the health bar """
-	health_bar.side = side
+	#health_bar.tside = type["side"]
 	health_bar.update_health_bar(current_health, max_health)
 
 
 func on_hit(damage, _current_attacker):
-	#attacker = current_attacker
-	
+	print_debug("TREE HIT!!", str(current_health))
 	set_health(-damage)
 	# Get healthbar to display
 	health_bar.visible = true

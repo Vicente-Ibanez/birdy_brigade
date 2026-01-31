@@ -6,15 +6,10 @@ var player
 
 
 # General Stats
-@export var main_type = "main_type_creatures"
-@export var sub_type = ""
 @export var side = ""
-@export var enemy = ""
-@export var has_inventory = "has_inventory_true"
-
 @export var enemy_type = ""
 
-@export var can_pick_up = "main_type_resources"
+@export var can_pick_up = "resources"
 var speed = 5
 
 # Navigation 
@@ -43,9 +38,10 @@ var attack_damage = 1
 @export var syncPos = Vector3(0,0,0)
 
 var terrain_name = "HTerrain"
+var type 
 
 func _ready():
-	print_debug("CREATURE EXISTS IN WORLD", side)
+	type = GameManager.entity_types[side]
 	if !player:
 		player = get_tree().get_first_node_in_group(side + "camera")
 	
@@ -53,17 +49,10 @@ func _ready():
 		$MultiplayerSynchronizer.set_multiplayer_authority(str(player.name).to_int())
 	else:
 		print_debug("NO PLAYER FOUND")
-	
-	# Add to 5 basic groups
-	add_to_group(main_type)
-	add_to_group(sub_type)
-	add_to_group(side)
-	add_to_group(enemy)
-	add_to_group(has_inventory)
 
 	update_health_bar()
 	
-	if sub_type == "sub_type_squirrel":
+	if type["sub_type"] == "squirrel":
 		# Squirrels are on layer 2 (layer), and can collide with 1 and 3 (mask)
 		set_collision_layer_value(1, false)
 		set_collision_layer_value(2, true)
@@ -71,7 +60,7 @@ func _ready():
 		set_collision_mask_value(1, false)
 		set_collision_mask_value(3, true)
 		set_collision_mask_value(4, true) # River / Buildings 
-	elif sub_type == "sub_type_bird":
+	elif type["sub_type"] == "bird":
 		# Birds are on layer 3 (layer), and can collide 2 (mask) but not the terrain (1)
 		set_collision_layer_value(1, false)
 		set_collision_layer_value(3, true)
@@ -93,7 +82,7 @@ func _physics_process(delta):
 
 			var collision = move_and_collide(new_velocity * delta)
 			if collision:
-				if collision.get_collider().is_in_group("sub_type_river"):
+				if collision.get_collider().type["sub_type"]=="river":
 					print_debug("!!!", collision.get_collider().name)
 					collision.get_collider().get_parent().float_down_river(self)
 
@@ -118,7 +107,7 @@ func _process(delta):
 			
 		# If there's a current target AND current target is within range and current target is enemy
 		if current_target and current_target in targets_in_range:
-			if current_target.is_in_group(enemy_type) or current_target.is_in_group("side_spider") or current_target.is_in_group("sub_type_construction") or current_target.is_in_group("main_type_other_structures"):
+			if current_target.type["side"]==enemy_type or current_target.type["sub_type"]=="construction" or current_target.type["main_type"]=="other_structures":
 				if attack_cooldown_counter <= 0:
 					# Reset attack cooldown
 					attack_cooldown_counter = attack_cooldown
@@ -134,18 +123,20 @@ func _process(delta):
 func assign_target(object_selected):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# If the target is an enemy, then send soldier to attack
-		if object_selected.is_in_group(enemy_type) or object_selected.is_in_group("side_spider"):
+		print_debug(object_selected.type, "!!!", enemy_type)
+		if object_selected.type["side"] == enemy_type: # or object_selected.is_in_group("side_spider"):
 			current_target = object_selected
+			print_debug("5 Assigned target")
 		# Attacking natural structures to get resources
-		elif object_selected.is_in_group("main_type_other_structures"):
+		elif object_selected.type["main_type"] == "other_structures":
 			current_target = object_selected
 		# Picking up resources
-		elif object_selected.is_in_group("main_type_resources"):
+		elif object_selected.type["main_type"] =="resources":
 			current_target = object_selected
 		# Depositing resources in base
-		elif object_selected.is_in_group("main_type_buildings"):
+		elif object_selected.type["main_type"] == "buildings":
 			current_target = object_selected
-		elif object_selected.is_in_group("sub_type_river"):
+		elif object_selected.type["sub_type"] == "river":
 			current_target = null
 
 # Health Based Function
@@ -163,7 +154,7 @@ func set_health(amount):
 
 func update_health_bar():
 	""" This function controlls the health bar """
-	health_bar.side = side
+	#health_bar.side = side
 	#if camera_location != null:
 		#print_debug(camera_location, "CAMERA")
 	health_bar.camera = camera_location
@@ -193,19 +184,19 @@ func attack(target):
 func _on_area_3d_body_entered(body):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# If the object is an enemy
-		if body.is_in_group(enemy_type) or body.is_in_group("main_type_other_structures") or body.is_in_group("sub_type_construction"):
+		if body.type["side"]==enemy_type or body.type["main_type"]=="other_structures" or body.type["sub_type"]=="sub_type_construction":
 			targets_in_range.append(body)
 			 ##If there's no target
 			#if !target:
 				#target = body
 		# Else if it's a resource and the troop was told to get it
-		elif body.is_in_group(can_pick_up) and body == current_target:
+		elif body.type["can_pickup"]=="true" and body == current_target:
 			# Try to pick up the item
 			if inventory.try_pick_up_item(body):
 				body.kill.rpc()
 				body.kill()
 				current_target = null
-		elif body.is_in_group("sub_type_main_building") and body.is_in_group(side) and body == current_target:
+		elif body.type["sub_type"] =="main_building" and body.type["side"]==side and body == current_target:
 			# Creature has arrived at the building
 			inventory.try_deposite_item(body)
 			current_target = null

@@ -1,11 +1,9 @@
 extends Node
 
 # General Stats
-@export var main_type = "main_type_buildings"
-@export var sub_type = "sub_type_base_main_base"
 @export var side = ""
 @export var enemy = ""
-@export var has_inventory = "has_inventory_true"
+@onready var type = GameManager.entity_types[side].duplicate()
 # Base Stats
 var max_health = 100
 var current_health
@@ -31,8 +29,10 @@ var camera_location
 var player 
 
 func _ready():
+	type.side = side
+	type.enemy = enemy
 	if !player:
-		player = get_tree().get_first_node_in_group(side + "camera")
+		player = get_tree().get_first_node_in_group(type["side"] + "camera")
 
 	if player:
 		$MultiplayerSynchronizer.set_multiplayer_authority(str(player.name).to_int())
@@ -40,7 +40,7 @@ func _ready():
 		print_debug("NO PLAYER FOUND")
 		
 	#$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
-	if sub_type == "sub_type_base_main_base":
+	if type["sub_type"] == "main_building":
 		# Main base has 10x health
 		max_health *= 10
 		#print_debug("added to main base")
@@ -51,11 +51,9 @@ func _ready():
 	heal_tick = heal_tick_counter
 	
 	# Add to 5 basic groups
-	add_to_group(main_type)
-	add_to_group(sub_type)
-	add_to_group(side)
-	add_to_group(enemy)
-	add_to_group(has_inventory)
+	for key in type:
+		add_to_group(type[key]) 
+
 		# Variable for randomly displacing drops 
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
@@ -68,9 +66,8 @@ func _process(delta):
 	if initial_place:
 		if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 			print_debug("Spawning Initial_place")
-			spawn_creatures.rpc(sub_type, side, enemy)
-			spawn_creatures(sub_type, side, enemy)
-			#print_debug("INITIAL PLACE", side)
+			spawn_creatures.rpc(type["sub_type"], type["side"], type["enemy"])
+			spawn_creatures(type["sub_type"], type["side"], type["enemy"])
 			initial_place = false
 
 	
@@ -105,17 +102,14 @@ func open_inventory():
 @rpc("any_peer")
 func spawn_creatures(sub_type, side, enemy):
 	for i in range(0, number_of_spawns):
-		print_debug("Spawning", i)
 		var creature = load("res://Full_Assets/creature_full.tscn")
 		var instance = creature.instantiate()
-		instance.sub_type = str("sub_type" + side.substr(4,len(side) - 4))
 		instance.side = side
-		instance.enemy = enemy
-		instance.enemy_type = "side" + enemy.substr(5,len(side) + 1)
+		instance.enemy_type = enemy
 		instance.add_to_group("minimap_objects")
 		var offset = 1.5 * (i + 2.7)
 		var z_offset = offset-10 
-		if instance.side == "side_squirrel":
+		if instance.side == "squirrel":
 			offset = -offset
 			z_offset = -z_offset
 		instance.position = self.position + Vector3(offset, (self.position.y/self.position.y)-1, z_offset)

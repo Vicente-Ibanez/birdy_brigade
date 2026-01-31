@@ -200,7 +200,7 @@ func place_building(placeRay, base_type_selected_string, s, e, r):
 	instance.final_construction_type = building 
 	instance.position = placeRay.position + Vector3(1.55, 0, 1.55)
 	instance.rotation.y = r
-	instance.final_construction_sub_type = "sub_type_" + base_type_selected_string
+	instance.final_construction_sub_type = base_type_selected_string
 	instance.side = s
 	instance.enemy = e
 	get_tree().current_scene.add_child(instance) 

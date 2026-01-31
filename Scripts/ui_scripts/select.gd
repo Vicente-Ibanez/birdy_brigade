@@ -36,21 +36,24 @@ func cast_ray_to_select():
 		
 func try_to_select(result):
 	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
-		var collider = result["collider"]
-		var object = collider.get_parent()
+		var object = result["collider"]
+		if not "type" in object:
+			print_debug("No Type")
+			object = object.get_parent()
 		# If choosing a soldier on your side, select them
-		if object.is_in_group(parent.side) and object.is_in_group(parent.creature_main_type):
+		if object.type["side"]==parent.type["side"] and object.type["main_type"]==parent.creature_main_type:
 			multiple_select(object)
 		# Else, if you're selecting an enemy
-		elif object.is_in_group(parent.enemy_type):
+		elif object.type["side"]==parent.type["enemy"]:
+			print_debug("ENEMY CLICKED")
 			# if you have you're type=soldier or building selected, attack enemy soldier
-			if object.is_in_group(parent.creature_main_type) or object.is_in_group(parent.building_type):
+			if object.type["main_type"]==parent.creature_main_type: #or object.type["main_type"]== parent.building_type:
 				attack_enemy_object(object)
-		# Collecting resources
-		#elif collider.is_in_group(parent.other_structures_type) or collider.is_in_group(parent.resource_main_type):
-			#attack_enemy_object(object)
-		else:
-			attack_enemy_object(collider)
+		# Else, if you are selecting a tree
+		elif object.type["sub_type"] == "tree": #or collider.is_in_group(parent.resource_main_type):
+			attack_enemy_object(object)
+		#else:
+			#attack_enemy_object(collider)
 		## Depositing resources in base on player's side
 		#elif object.is_in_group(building_type) and object.is_in_group(side):
 			#attack_enemy_object(object)
@@ -97,7 +100,10 @@ func multiple_select(object):
 func attack_enemy_object(enemy_object):
 	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# Command each selected soldier to target the enemy soldier
+		#print_debug("ATTACKING ENEMY")
 		for select_box_parent in select_box_parents:
+			#print(select_box_parent, "    ", enemy_object)
 			# If the soldier and enemy_soldier still exist
-			if select_box_parent[0] and enemy_object: 
+			if select_box_parent[0] and enemy_object:
+				print_debug("ASSIGNING TARGET")
 				select_box_parent[0].assign_target(enemy_object)

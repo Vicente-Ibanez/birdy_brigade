@@ -1,6 +1,6 @@
 extends Sprite3D
 var health_proportion 
-var side
+#var side
 @onready var x_scale = self.scale.x
 var camera 
 @onready var healthbar_texture = preload("res://Assets/Background.jpg")
@@ -10,11 +10,11 @@ func update_health_bar(current_health, max_health):
 	health_proportion = (float(current_health)/float(max_health))
 	self.scale.x =  (health_proportion * x_scale)
 
-	if side == null or camera == null: 
+	if $"..".type["side"] == null or camera == null: 
 		texture = healthbar_texture
 		modulate[1] = 0
 		modulate[2] = 0
-	elif str(side) + "camera" != camera.side:
+	elif str($"..".type["side"]) + "camera" != camera.type["side"]:
 		texture = healthbar_texture
 		modulate[1] = health_proportion
 	

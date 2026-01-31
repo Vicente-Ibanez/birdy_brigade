@@ -1,13 +1,12 @@
 extends Node3D
 
 # For checking groups 
-@export var side = "side_squirrel"
-@export var enemy = "enemy_bird"
-var creature_main_type = "main_type_creatures"
-var building_type = "main_type_buildings"
-var other_structures_type = "main_type_other_structures"
-var resource_main_type = "main_type_resources"
-@export var enemy_type = "side_bird"
+var type = GameManager.entity_types["squirrel"]
+
+var creature_main_type = "creatures"
+var building_type = "buildings"
+var other_structures_type = "other_structures"
+var resource_main_type = "resources"
 
 # Sidebar variables
 @onready var sidebar_scene = "res://Full_Assets/sidebar.tscn"
@@ -36,7 +35,7 @@ func _ready():
 	## Assign the player to a side depending if a side is already taken
 	position = Vector3(position.x, position.y+5, position.z-150)
 	rotation.y += 180
-	add_to_group(side + "camera")
+	add_to_group(type["side"] + "camera")
 	
 func _input(event):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
