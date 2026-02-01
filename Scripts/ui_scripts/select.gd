@@ -33,34 +33,38 @@ func cast_ray_to_select():
 		ray_query.collide_with_areas = true
 		var result = space.intersect_ray(ray_query)
 		return result
-		
+
 func try_to_select(result):
+	""" 
+		Function determines the object's type and
+		then dispatches the troops to do the proper 
+		action.
+	"""
+	
 	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
 		var object = result["collider"]
-		print_debug("CLICKED", object.name)
 		
+		# Player clicked the ground, move troops there
 		if object.is_in_group("terrain"):
-			attack_enemy_object(object)
+			assign_creature_target(object)
 			return
 
-		if not "type" in object:
-			print_debug("No Type")
+		# If object doesn't have type, try to get type or ignore click
+		if (not "type" in object):
 			object = object.get_parent()
+			if (not "type" in object):
+				return
 
-		# If choosing a soldier on your side, select them
+		# Selecting an ally soldier, select it
 		if object.type["side"]==parent.type["side"] and object.type["main_type"]==parent.creature_main_type:
 			multiple_select(object)
-		# Else, if you're selecting an enemy
+		# Selecting an enemy, attack it
 		elif object.type["side"]==parent.type["enemy"]:
-			print_debug("ENEMY CLICKED")
-			# if you have you're type=soldier or building selected, attack enemy soldier
-			if object.type["main_type"]==parent.creature_main_type: #or object.type["main_type"]== parent.building_type:
-				attack_enemy_object(object)
-		# Else, if you are selecting a tree
+			assign_creature_target(object)
+		# Selecting a tree
 		elif object.type["sub_type"] == "tree": #or collider.is_in_group(parent.resource_main_type):
-			attack_enemy_object(object)
-		#else:
-			#attack_enemy_object(collider)
+			assign_creature_target(object)
+		
 		## Depositing resources in base on player's side
 		#elif object.is_in_group(building_type) and object.is_in_group(side):
 			#attack_enemy_object(object)
@@ -68,6 +72,16 @@ func try_to_select(result):
 				#print_debug("TESTING OPEN INVENTORY OF Squirrel", object)
 				#object.open_inventory()
 
+func assign_creature_target(enemy_object):
+	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
+		# Command each selected soldier to target the enemy soldier
+		for select_box_parent in select_box_parents:
+			# If the soldier and enemy_soldier still exist
+			if select_box_parent[0] and enemy_object:
+				select_box_parent[0].assign_target(enemy_object)
+
+
+# Selecting ally troops
 func clear_selection():
 	""" This function clears all selected soldiers """
 	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
@@ -103,14 +117,3 @@ func multiple_select(object):
 			select_box_parents[reselected_index][0].remove_child(select_box_parents[reselected_index][1])
 			# Regardless of if it exists, remove it from the list
 			select_box_parents.remove_at(reselected_index)
-
-func attack_enemy_object(enemy_object):
-	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
-		# Command each selected soldier to target the enemy soldier
-		#print_debug("ATTACKING ENEMY")
-		for select_box_parent in select_box_parents:
-			#print(select_box_parent, "    ", enemy_object)
-			# If the soldier and enemy_soldier still exist
-			if select_box_parent[0] and enemy_object:
-				print_debug("ASSIGNING TARGET")
-				select_box_parent[0].assign_target(enemy_object)

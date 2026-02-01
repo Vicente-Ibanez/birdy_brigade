@@ -1,7 +1,7 @@
 extends Node3D
 
 # For checking groups 
-@export var type:Dictionary #= GameManager.entity_types["squirrel"]
+@export var type:Dictionary 
 
 var creature_main_type = "creatures"
 var building_type = "buildings"
@@ -37,9 +37,6 @@ func _ready():
 	position = Vector3(position.x, position.y+5, position.z-150)
 	rotation.y += 180
 	add_to_group(type["side"] + "camera")
-	#if type["side"]=="bird":
-		#var img = load("res://Assets/Creature_Images/Bird_Soldier.png")
-		#$Sprite3D.texture = img
 	if str(multiplayer.get_unique_id()) != name:
 			camera.current = false
 

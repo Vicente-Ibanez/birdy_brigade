@@ -37,7 +37,6 @@ var attack_damage = 1
 
 @export var syncPos = Vector3(0,0,0)
 
-var terrain_name = "HTerrain"
 var type 
 
 func _ready():
@@ -90,10 +89,9 @@ func _physics_process(delta):
 			if collision:
 				if collision.get_collider().type["sub_type"]=="river":
 					collision.get_collider().get_parent().float_down_river(self)
-
 	else:
 		global_position = global_position.lerp(syncPos, .5)
-		
+
 func update_target_location(target_location):
 	nav_agent.set_target_position(target_location)
 
@@ -102,7 +100,7 @@ func _process(delta):
 		if len(cameras_list) > 0:
 			camera_location = cameras_list[0]
 			update_health_bar()
-			
+
 		else:
 			cameras_list = get_tree().get_nodes_in_group(side + "camera")
 
@@ -127,12 +125,13 @@ func _process(delta):
 func assign_target(object_selected):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# If the target is an enemy, then send soldier to attack
-		print_debug(object_selected, "!!!", enemy_type)
+		
+		# If terrain, go to location
 		if object_selected.is_in_group("terrain"):
 			current_target = object_selected
-		elif object_selected.type["side"] == enemy_type: # or object_selected.is_in_group("side_spider"):
+		# Attacking enemy soldier
+		elif object_selected.type["side"] == enemy_type:
 			current_target = object_selected
-			print_debug("5 Assigned target")
 		# Attacking natural structures to get resources
 		elif object_selected.type["main_type"] == "other_structures":
 			current_target = object_selected

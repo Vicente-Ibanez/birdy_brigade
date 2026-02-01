@@ -1,7 +1,7 @@
 [gd_scene load_steps=33 format=3 uid="uid://dnepl2iikj3k5"]
 
 [ext_resource type="Script" path="res://Scripts/multiplayer.gd" id="1_16vvh"]
-[ext_resource type="PackedScene" uid="uid://bdlwgi4wvwiv7" path="res://Full_Assets/ui_controller_squirrel.tscn" id="2_261pk"]
+[ext_resource type="PackedScene" uid="uid://bdlwgi4wvwiv7" path="res://Full_Assets/ui_controller.tscn" id="2_261pk"]
 [ext_resource type="Texture2D" uid="uid://bvassvlxwh2l6" path="res://Assets/Background_map.jpg" id="4_ykqu8"]
 [ext_resource type="Texture2D" uid="uid://dbmecrs5n8485" path="res://Assets/squirrel soldier grey.png" id="6_bsm2v"]
 [ext_resource type="Texture2D" uid="uid://blndtblnvtfev" path="res://Assets/squirrel soldier highlight.png" id="7_grxjc"]
@@ -23,7 +23,7 @@
 [ext_resource type="Material" uid="uid://rwbjg3tgujum" path="res://river_temp/WaterPlane.tres" id="23_q1x7m"]
 [ext_resource type="Script" path="res://Scripts/river.gd" id="24_uuiuc"]
 
-[sub_resource type="Resource" id="Resource_dlu5m"]
+[sub_resource type="Resource" id="Resource_e6mig"]
 script = ExtResource("15_30fw0")
 amount = 10000
 enabled = true
@@ -32,7 +32,7 @@ custom_seed = 3
 restrict_height = true
 reference_frame = 1
 
-[sub_resource type="Resource" id="Resource_654br"]
+[sub_resource type="Resource" id="Resource_wevhb"]
 script = ExtResource("16_xyi13")
 position = Vector3(0, 0, 0)
 rotation = Vector3(0, 0, 0)
@@ -43,7 +43,7 @@ custom_seed = 0
 restrict_height = false
 reference_frame = 2
 
-[sub_resource type="Resource" id="Resource_2jkje"]
+[sub_resource type="Resource" id="Resource_ydlvg"]
 script = ExtResource("17_kmr02")
 ray_direction = Vector3(0, -1, 0)
 ray_length = 10.0
@@ -59,15 +59,15 @@ custom_seed = 0
 restrict_height = false
 reference_frame = 0
 
-[sub_resource type="Resource" id="Resource_pwnwn"]
+[sub_resource type="Resource" id="Resource_qilcr"]
 script = ExtResource("14_h5mya")
-stack = Array[Resource("res://addons/proton_scatter/src/modifiers/base_modifier.gd")]([SubResource("Resource_dlu5m"), SubResource("Resource_654br"), SubResource("Resource_2jkje")])
+stack = Array[Resource("res://addons/proton_scatter/src/modifiers/base_modifier.gd")]([SubResource("Resource_e6mig"), SubResource("Resource_wevhb"), SubResource("Resource_ydlvg")])
 
 [sub_resource type="Resource" id="Resource_6tbds"]
 script = ExtResource("22_lhnpy")
 size = Vector3(1400, 2, 1400)
 
-[sub_resource type="Resource" id="Resource_dwh03"]
+[sub_resource type="Resource" id="Resource_y50d1"]
 script = ExtResource("15_30fw0")
 amount = 10000
 enabled = true
@@ -76,7 +76,7 @@ custom_seed = 4
 restrict_height = true
 reference_frame = 1
 
-[sub_resource type="Resource" id="Resource_4ut1c"]
+[sub_resource type="Resource" id="Resource_mtpe6"]
 script = ExtResource("16_xyi13")
 position = Vector3(0, 0, 0)
 rotation = Vector3(0, 0, 0)
@@ -87,7 +87,7 @@ custom_seed = 0
 restrict_height = false
 reference_frame = 2
 
-[sub_resource type="Resource" id="Resource_02y6c"]
+[sub_resource type="Resource" id="Resource_sg448"]
 script = ExtResource("17_kmr02")
 ray_direction = Vector3(0, -1, 0)
 ray_length = 10.0
@@ -103,9 +103,9 @@ custom_seed = 0
 restrict_height = false
 reference_frame = 0
 
-[sub_resource type="Resource" id="Resource_rsh1t"]
+[sub_resource type="Resource" id="Resource_7wb4q"]
 script = ExtResource("14_h5mya")
-stack = Array[Resource("res://addons/proton_scatter/src/modifiers/base_modifier.gd")]([SubResource("Resource_dwh03"), SubResource("Resource_4ut1c"), SubResource("Resource_02y6c")])
+stack = Array[Resource("res://addons/proton_scatter/src/modifiers/base_modifier.gd")]([SubResource("Resource_y50d1"), SubResource("Resource_mtpe6"), SubResource("Resource_sg448")])
 
 [sub_resource type="Resource" id="Resource_4f31u"]
 script = ExtResource("22_lhnpy")
@@ -113,7 +113,7 @@ size = Vector3(1400, 2, 1400)
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_16vvh")
-SquirrelScene = ExtResource("2_261pk")
+PlayerScene = ExtResource("2_261pk")
 
 [node name="MiniMap" type="MarginContainer" parent="."]
 offset_left = 8.0
@@ -237,7 +237,7 @@ vertices = PackedVector3Array(2.16293, 0, 1.80072, 36.2126, 0, 20.2034, 49.7225,
 process_mode = 3
 transform = Transform3D(0.144671, 0, 0, 0, 0.00746611, 0, 0, 0, 0.144671, -3.4519, 0.54159, 2.72038)
 script = ExtResource("13_0gfyy")
-modifier_stack = SubResource("Resource_pwnwn")
+modifier_stack = SubResource("Resource_qilcr")
 Performance/use_chunks = true
 Performance/chunk_dimensions = Vector3(15, 15, 15)
 
@@ -255,7 +255,7 @@ shape = SubResource("Resource_6tbds")
 process_mode = 3
 transform = Transform3D(0.144671, 0, 0, 0, 0.00746611, 0, 0, 0, 0.144671, -3.4519, 1.32067, 2.72038)
 script = ExtResource("13_0gfyy")
-modifier_stack = SubResource("Resource_rsh1t")
+modifier_stack = SubResource("Resource_7wb4q")
 Performance/use_chunks = true
 Performance/chunk_dimensions = Vector3(15, 15, 15)
 
