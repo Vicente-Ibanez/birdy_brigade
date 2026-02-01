@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://ct5n8h6i1yp26"]
+[gd_scene load_steps=10 format=3 uid="uid://ct5n8h6i1yp26"]
 
 [ext_resource type="Script" path="res://Scripts/creature.gd" id="1_anaik"]
 [ext_resource type="Texture2D" uid="uid://5jaat58xrclc" path="res://Assets/squirrel soldier.png" id="2_361tj"]
 [ext_resource type="Script" path="res://Scripts/sprite_image.gd" id="3_4wwkd"]
 [ext_resource type="PackedScene" uid="uid://3na5vq7jdqi3" path="res://Full_Assets/character_health_bar.tscn" id="4_jqo1h"]
 [ext_resource type="Script" path="res://Scripts/inventory.gd" id="5_3ipts"]
+[ext_resource type="Script" path="res://Scripts/creature_movement.gd" id="6_387ya"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dew5v"]
 
@@ -55,6 +56,9 @@ root_path = NodePath(".")
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_0msd8")
 visibility_update_mode = 1
+
+[node name="movement" type="Node" parent="."]
+script = ExtResource("6_387ya")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

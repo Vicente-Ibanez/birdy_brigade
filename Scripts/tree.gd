@@ -38,6 +38,7 @@ func _ready():
 	rng.randomize()
 
 func _process(delta):
+
 	if health_bar.visible and health_bar_visible_timer > 0:
 		health_bar_visible_timer -= 1
 	elif health_bar_visible_timer <= 0:

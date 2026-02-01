@@ -10,10 +10,10 @@ var player
 @export var enemy_type = ""
 
 @export var can_pick_up = "resources"
-var speed = 5
+#var speed = 5
 
 # Navigation 
-@onready var nav_agent = $NavigationAgent3D
+#@onready var nav_agent = $NavigationAgent3D
 
 # Health variables
 var max_health = 5 #15
@@ -75,26 +75,6 @@ func _ready():
 		
 	cameras_list = get_tree().get_nodes_in_group(side + "camera")
 
-
-func _physics_process(delta):
-	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		syncPos = global_position
-		if not nav_agent.is_navigation_finished():
-		#if current_target:
-			var current_location = global_transform.origin
-			var next_location = nav_agent.get_next_path_position()
-			var new_velocity = (next_location - current_location).normalized() * speed
-
-			var collision = move_and_collide(new_velocity * delta)
-			if collision:
-				if collision.get_collider().type["sub_type"]=="river":
-					collision.get_collider().get_parent().float_down_river(self)
-	else:
-		global_position = global_position.lerp(syncPos, .5)
-
-func update_target_location(target_location):
-	nav_agent.set_target_position(target_location)
-
 func _process(delta):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		if len(cameras_list) > 0:
@@ -105,7 +85,7 @@ func _process(delta):
 			cameras_list = get_tree().get_nodes_in_group(side + "camera")
 
 		if current_target and is_instance_valid(current_target):
-			update_target_location(current_target.position)
+			$movement.update_target_location(current_target.position)
 			
 		# If there's a current target AND current target is within range and current target is enemy
 		if current_target and current_target in targets_in_range:
@@ -120,7 +100,6 @@ func _process(delta):
 					attack_cooldown_counter -= attack_speed
 	else:
 		global_position = global_position.lerp(syncPos, .5)
-		#camera_location = "ERROR"
 
 func assign_target(object_selected):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
@@ -213,11 +192,4 @@ func _on_area_3d_body_exited(body):
 		var index = targets_in_range.find(body, 0)
 		targets_in_range.remove_at(index)
 
-
-func set_location(pos):
-	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-		syncPos = global_position
-		position = pos
-	else:
-		global_position = global_position.lerp(pos, .5)
 

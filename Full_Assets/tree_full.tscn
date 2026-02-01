@@ -18,7 +18,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0733337, 1.75248, -0.07766
 shape = SubResource("BoxShape3D_tk3xs")
 
 [node name="HealthBar" parent="." instance=ExtResource("3_ec8kp")]
-transform = Transform3D(-2.16863, 3.25166e-21, 0.0450944, 0, 0.783246, -5.61773e-19, -0.0395951, -1.78094e-19, -2.46983, -10.0385, 437.656, 0)
+transform = Transform3D(-0.0799867, 1.20394e-22, 0.00166121, 0, 0.029, -2.0695e-20, -0.00146041, -6.594e-21, -0.0909848, 2.08165e-12, 5.58357, 2.08165e-12)
 billboard = 1
 
 [node name="Pine_Tree_GLB" parent="." instance=ExtResource("3_evqse")]

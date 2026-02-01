@@ -64,6 +64,7 @@ func try_to_select(result):
 		# Selecting a tree
 		elif object.type["sub_type"] == "tree": #or collider.is_in_group(parent.resource_main_type):
 			assign_creature_target(object)
+			#object.health_bar.camera = parent
 		
 		## Depositing resources in base on player's side
 		#elif object.is_in_group(building_type) and object.is_in_group(side):
