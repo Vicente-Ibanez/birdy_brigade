@@ -1,4 +1,4 @@
-extends AnimatableBody3D
+extends CharacterBody3D
 
 @onready var cameras_list
 var camera_location
@@ -41,6 +41,7 @@ var terrain_name = "HTerrain"
 var type 
 
 func _ready():
+	floor_snap_length = 0.6
 	type = GameManager.entity_types[side]
 	
 	if type["side"] == "bird":
@@ -79,7 +80,8 @@ func _ready():
 func _physics_process(delta):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		syncPos = global_position
-		if current_target:
+		if not nav_agent.is_navigation_finished():
+		#if current_target:
 			var current_location = global_transform.origin
 			var next_location = nav_agent.get_next_path_position()
 			var new_velocity = (next_location - current_location).normalized() * speed
@@ -87,9 +89,7 @@ func _physics_process(delta):
 			var collision = move_and_collide(new_velocity * delta)
 			if collision:
 				if collision.get_collider().type["sub_type"]=="river":
-					print_debug("!!!", collision.get_collider().name)
 					collision.get_collider().get_parent().float_down_river(self)
-
 
 	else:
 		global_position = global_position.lerp(syncPos, .5)
@@ -127,8 +127,10 @@ func _process(delta):
 func assign_target(object_selected):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 		# If the target is an enemy, then send soldier to attack
-		print_debug(object_selected.type, "!!!", enemy_type)
-		if object_selected.type["side"] == enemy_type: # or object_selected.is_in_group("side_spider"):
+		print_debug(object_selected, "!!!", enemy_type)
+		if object_selected.is_in_group("terrain"):
+			current_target = object_selected
+		elif object_selected.type["side"] == enemy_type: # or object_selected.is_in_group("side_spider"):
 			current_target = object_selected
 			print_debug("5 Assigned target")
 		# Attacking natural structures to get resources
@@ -187,8 +189,10 @@ func attack(target):
 
 func _on_area_3d_body_entered(body):
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
+		if not "type" in body:
+			pass
 		# If the object is an enemy
-		if body.type["side"]==enemy_type or body.type["main_type"]=="other_structures" or body.type["sub_type"]=="sub_type_construction":
+		elif body.type["side"]==enemy_type or body.type["main_type"]=="other_structures" or body.type["sub_type"]=="sub_type_construction":
 			targets_in_range.append(body)
 			 ##If there's no target
 			#if !target:

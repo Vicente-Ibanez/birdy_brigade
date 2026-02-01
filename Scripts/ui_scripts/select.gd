@@ -37,9 +37,16 @@ func cast_ray_to_select():
 func try_to_select(result):
 	if multi_sync.get_multiplayer_authority() == multiplayer.get_unique_id():
 		var object = result["collider"]
+		print_debug("CLICKED", object.name)
+		
+		if object.is_in_group("terrain"):
+			attack_enemy_object(object)
+			return
+
 		if not "type" in object:
 			print_debug("No Type")
 			object = object.get_parent()
+
 		# If choosing a soldier on your side, select them
 		if object.type["side"]==parent.type["side"] and object.type["main_type"]==parent.creature_main_type:
 			multiple_select(object)
